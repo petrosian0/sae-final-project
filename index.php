@@ -10,7 +10,8 @@
   
 <header class='flex shadow-md py-4 px-4 sm:px-10 bg-white font-[sans-serif] min-h-[70px] tracking-wide relative z-50'>
   <div class='flex flex-wrap items-center justify-between gap-5 w-full'>
-    <h1>ServiceDesk</h1>
+    
+      <h1 class="text-3xl p-3 font-bold mb-2 text-gray-800">ServiceDesk</h1>
     </a>
 
     <div id="collapseMenu"
@@ -32,7 +33,7 @@
           <a href="javascript:void(0)"><img src="https://readymadeui.com/readymadeui.svg" alt="logo" class='w-36' />
           </a>
         </li>
-        <li class='max-lg:border-b border-gray-300 max-lg:py-3 px-3'>
+<!--         <li class='max-lg:border-b border-gray-300 max-lg:py-3 px-3'>
           <a href='javascript:void(0)'
             class='hover:text-[#007bff] text-[#007bff] block font-semibold text-[15px]'>Home</a>
         </li>
@@ -41,7 +42,7 @@
         </li>
         <li class='max-lg:border-b border-gray-300 max-lg:py-3 px-3'><a href='javascript:void(0)'
             class='hover:text-[#007bff] text-gray-500 block font-semibold text-[15px]'>Contact</a>
-        </li>
+        </li> -->
       </ul>
     </div>
 
@@ -55,12 +56,19 @@
             clip-rule="evenodd"></path>
         </svg>
       </button>
+
     </div>
   </div>
 </header>
 
 <main>
-
+    <div class="flex justify-between items-center">
+      <h1 class="text-3xl p-3 font-bold mb-2 text-gray-800">Tickets</h1>
+    <form method="GET" action="ticket.php">
+      <input type="hidden" name="ticket_id" value="">
+      <button type="submit" class="bg-yellow-500 hover:bg-blue-700 text-white font-bold py-1.5 px-4 rounded mt-2 mr-10">Create</button>
+    </form>
+    </div>
 <?php
 // connect to DB
 include 'Database.php'; 
@@ -77,17 +85,30 @@ $result = $conn->query($query);
 if ($result->num_rows > 0) {
     // Output data of each row
     while($row = $result->fetch_assoc()) {
-        echo '<div class="p-20 bg-blue-100">';
-        echo '  <div class="bg-white p-6 rounded-lg shadow-lg">';
-        echo '    <h2 class="text-2xl font-bold mb-2 text-gray-800">' . htmlspecialchars($row["title"]) . '</h2>';
-        echo '    <p class="text-green-700 rounded-lg bg-blue-100 p-5 w-20">' . htmlspecialchars($row["status"]) . '</p>';
-        echo '    <p class="text-gray-700">' . htmlspecialchars($row["description"]) . '</p>';
-        echo '  <form method="GET" action="ticket.php">';
-        echo '    <input type="hidden" name="ticket_id" value="' . htmlspecialchars($row["id"]) . '">';
-        echo '    <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-1.5 px-4 rounded mt-2"> Edit </button>';
-        echo '   </form>';
-        echo '  </div>';
-        echo '</div>';
+        
+      echo '<div class="p-10 bg-blue-100">';
+      echo '  <div class="bg-white p-6 rounded-lg shadow-lg">';
+
+      echo '    <div class="flex justify-between items-center">';
+      echo '      <h2 class="text-2xl font-bold text-gray-800">' . htmlspecialchars($row["title"]) . '</h2>';
+
+      echo '      <p class="text-green-700 bg-blue-100 p-2 rounded-lg">' . htmlspecialchars($row["status"]) . '</p>'; 
+      echo '    </div>';
+
+      echo '    <p class="text-gray-700 mt-4">' . htmlspecialchars($row["description"]) . '</p>'; 
+
+      echo ' <div class="flex justify-between items-center">';
+      echo '    <form method="GET" action="ticket.php">';
+      echo '      <input type="hidden" name="ticket_id" value="' . htmlspecialchars($row["id"]) . '">';
+      echo '      <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-1.5 px-4 rounded mt-2">Edit</button>';
+      echo '    </form>';
+      echo '    <form method="POST" action="delete_ticket.php">';
+      echo '      <input type="hidden" name="ticket_id" value="' . htmlspecialchars($row["id"]) . '">';
+      echo '      <button type="submit" class="bg-red-500 hover:bg-blue-700 text-white font-bold py-1.5 px-4 rounded mt-2">Delete</button>';
+      echo '    </form>';
+      echo '  </div>';
+      echo '  </div>';
+      echo '</div>';
     }
 } else {
     echo "No data found.";

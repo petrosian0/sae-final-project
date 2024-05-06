@@ -12,22 +12,28 @@
 
 include 'Database.php'; 
 
-    $id = $_GET['ticket_id']; 
-    $query = "SELECT t1.id,
-                 t1.title, 
-                 t1.description, 
-                 s2.status 
-          FROM tickets t1
-          INNER JOIN status s2 on t1.status_id = s2.id";
+    $id = isset($_GET['ticket_id']) ? (int)$_GET['ticket_id'] : 0; // Ensure ID is an integer
+    if ($id != 0) {
 
-    $result = $conn->query($query);
-    $row=mysqli_fetch_array($result,MYSQLI_ASSOC);
+        $query = "SELECT t1.id,
+                     t1.title, 
+                     t1.description, 
+                     s2.status 
+              FROM tickets t1
+              INNER JOIN status s2 on t1.status_id = s2.id";
+
+        $result = $conn->query($query);
+        $row=mysqli_fetch_array($result,MYSQLI_ASSOC);   
+
+    }  
 
     $query1 = "select status
-              from status";
-    
+                  from status";
+        
     $result1 = $conn->query($query1);
-    $row1=mysqli_fetch_array($result1,MYSQLI_ASSOC);          
+    $row1=mysqli_fetch_array($result1,MYSQLI_ASSOC);  
+
+    $form_action = ($id > 0) ? "save_changes.php" : "create_ticket.php";
 
 ?>
 
@@ -55,51 +61,67 @@ include 'Database.php';
   </ol>
 </nav>
 
+    <form class="p-10 ticket-form" method="POST" action="<?php echo htmlspecialchars($form_action); ?>">
 
-    <form class="p-10" method="POST" action="save_changes.php">
         <div class="flex flex-wrap -mx-3 mb-6">
+            <input type="hidden" name="ticket_id" value="<?php echo htmlspecialchars($id); ?>">
             <div class="w-full md:w-1/2 px-3 mb-6 md:mb-0">
+
                 <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" for="grid-first-name">
                     Title
                 </label>
-                <input value="<?php echo htmlspecialchars($row["title"]) ?>" class="appearance-none block w-full bg-gray-200 text-gray-700 border border-red-500 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white" id="grid-first-name" type="text" placeholder="Jane">
+
+                <input value="<?php echo htmlspecialchars($row["title"]) ?>" name="title" class="appearance-none block w-full bg-gray-200 text-gray-700 border rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white" id="grid-title" type="text" placeholder="ORA-20001 - ...">
+                <div class="title-hidden hidden"></div>
             </div>
+
             <div class="w-full md:w-1/2 px-3">
-            <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" for="grid-last-name">
-                Description
-            </label>
-            <textarea value="<?php echo htmlspecialchars($row["description"]) ?>" class="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500" id="grid-last-name" name="last_name"  rows="3">
-                 <?php echo htmlspecialchars($row["description"]) ?>
-            </textarea>
-        </div>
+
+                <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" for="grid-last-name">
+                    Description
+                </label>
+
+                <textarea value="<?php echo htmlspecialchars($row["description"]) ?>" class="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500" id="grid-description" name="description"  rows="3">
+                     <?php echo htmlspecialchars($row["description"]) ?>
+                </textarea>
+                <div class="description-hidden hidden"></div>
+
+            </div>
         </div>
         <div class="flex flex-wrap -mx-3 mb-2">
 
             <div class="w-full md:w-1/3 px-3 mb-6 md:mb-0">
-                <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" for="grid-state">
-                    Status
-                </label>
                 <div class="relative">
-                    <select value="<?php echo htmlspecialchars($row["status"]) ?>" class="block appearance-none w-full bg-gray-200 border border-gray-200 text-gray-700 py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500" id="grid-state">
+
+                    <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" for="grid-status">
+                        Status
+                    </label>
+                    <select value="<?php echo htmlspecialchars($row["status"]) ?>" name="status" class="block appearance-none w-full bg-gray-200 border border-gray-200 text-gray-700 py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500" id="grid-status">
                     <?php
                         while($row1 = $result1->fetch_assoc()) {
                             echo '<option>' . htmlspecialchars($row1["status"]) . '</option>';
                         }
                     ?>
                     </select>
+
                     <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
+
                         <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
                             <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/>
                         </svg>
+
                     </div>
+
                 </div>
             </div>
         </div>
-        <input type="hidden" name="ticket_id" value="' . $id . '">';
-        <button type="submit">Submit</button>
-    </form>;
-
+        <br>
+        <br>
+    <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Save</button>
+    <button class="bg-blue-500 hover:bg-yellow-700 text-white font-bold py-2 px-4 rounded">Close</button>
+    </form>
     
     
+    <script src="./js/validations.js"></script>
 </body>
 </html>
