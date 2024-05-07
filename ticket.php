@@ -81,9 +81,7 @@ include 'Database.php';
                     Description
                 </label>
 
-                <textarea value="<?php echo htmlspecialchars($row["description"]) ?>" class="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500" id="grid-description" name="description"  rows="3">
-                     <?php echo htmlspecialchars($row["description"]) ?>
-                </textarea>
+                <textarea value="<?php echo htmlspecialchars($row["description"]) ?>" class="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500" id="grid-description" name="description"  rows="3"><?php echo htmlspecialchars($row["description"]) ?></textarea>
                 <div class="description-hidden hidden"></div>
 
             </div>

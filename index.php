@@ -65,7 +65,6 @@
     <div class="flex justify-between items-center">
       <h1 class="text-3xl p-3 font-bold mb-2 text-gray-800">Tickets</h1>
     <form method="GET" action="ticket.php">
-      <input type="hidden" name="ticket_id" value="">
       <button type="submit" class="bg-yellow-500 hover:bg-blue-700 text-white font-bold py-1.5 px-4 rounded mt-2 mr-10">Create</button>
     </form>
     </div>
